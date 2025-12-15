@@ -13,35 +13,10 @@ import SocialSelector from "@/components/smoothui/social-selector"
 import { ShimmerButton } from "@/components/ui/shimmer-button"
 import { WordRotate } from "@/components/ui/word-rotate"
 import { LineShadowText } from "@/components/ui/line-shadow-text"
-import { Modal, ModalBody, ModalContent, ModalFooter } from "@/components/ui/animated-modal"
-import { WaitlistForm } from "@/components/waitlist-form"
-import { toast } from "sonner"
-import { useState } from "react"
-import { useModal } from "@/components/ui/animated-modal"
 
 
 
-function HomeContent() {
-  const [email, setEmail] = useState("");
-  const { setOpen } = useModal();
-
-  const handleWaitlistClick = () => {
-    if (!email || !email.includes("@")) {
-      toast.error("Por favor, insira um email válido");
-      return;
-    }
-
-    // Toast de sucesso simulando salvamento do email
-    toast.success("Email cadastrado com sucesso!", {
-      description: "Agora complete seu perfil para receber updates personalizados.",
-    });
-
-    // Abre a modal após o toast
-    setTimeout(() => {
-      setOpen(true);
-    }, 500);
-  };
-
+export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-8 py-32 px-16  sm:items-start z-10">
@@ -66,37 +41,12 @@ function HomeContent() {
           <TypingAnimation>luzzi.track("clicked_signup");</TypingAnimation>
         </Terminal>
         <div className="flex justify-between gap-4 w-full justify-between items-center">
-          <Input
-            type='email'
-            placeholder="Email"
-            className="w-full bg-white"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <ShimmerButton onClick={handleWaitlistClick}>Inscrever</ShimmerButton>
+          <Input type='email' placeholder="Email" className="w-full bg-white" />
+          <ShimmerButton>Entrar na lista</ShimmerButton>
         </div>
         <SocialSelector />
 
-        <ModalBody>
-          <ModalContent>
-            <h2 className="text-2xl font-bold mb-2">
-              Me ajuda a te ajudar com mais 3 respostas
-            </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-              Suas respostas vão permitir que eu personalize o Luzzi para o seu caso de uso específico e te avise quando as features que você precisa estiverem prontas.
-            </p>
-            <WaitlistForm />
-          </ModalContent>
-        </ModalBody>
       </main>
     </div >
-  );
-}
-
-export default function Home() {
-  return (
-    <Modal>
-      <HomeContent />
-    </Modal>
   );
 }
