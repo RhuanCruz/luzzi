@@ -13,15 +13,23 @@ import SocialSelector from "@/components/smoothui/social-selector"
 import { ShimmerButton } from "@/components/ui/shimmer-button"
 import { WordRotate } from "@/components/ui/word-rotate"
 import { LineShadowText } from "@/components/ui/line-shadow-text"
-
-
+import { Announcement, AnnouncementTag, AnnouncementTitle } from "@/components/ui/announcement";
+import { ArrowUpRightIcon, Book } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-8 py-32 px-16  sm:items-start z-10">
         <div className="flex flex-col gap-1">
-          <LineShadowText>Waitlist Luzzi</LineShadowText>
+          <div className="w-fit">
+            <Announcement movingBorder className='w-fit'>
+              <AnnouncementTitle>
+                <span className="text-muted-foreground"   >Waitlist</span>
+                <span className="text-primary text-md"   >Luzzi</span>
+
+              </AnnouncementTitle>
+            </Announcement>
+          </div>
           <div className="flex gap-2 justify-start items-center">
             <TextAnimate animation="blurInUp" by="word" className="text-4xl">
               Analytics para
