@@ -57,18 +57,14 @@ function HomeContent() {
     setIsLoading(false);
 
     if (!result.success) {
-      toast.error(result.error || "Erro ao cadastrar email");
+      // Apenas log do erro, sem toast
+      console.error("Erro ao cadastrar email:", result.error);
       // Se falhar, fecha tudo
       collapse();
       setToolbarExpanded(false);
       setActiveStep(null);
       return;
     }
-
-    // Toast de sucesso
-    toast.success("Email cadastrado com sucesso!", {
-      description: "Agora complete seu perfil para receber updates personalizados.",
-    });
   };
 
   const steps = [

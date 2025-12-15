@@ -15,10 +15,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "sonner";
 import { createContext, useContext, useState, ReactNode } from "react";
 import { updateWaitlistData } from "@/app/actions/waitlist";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   analytics: z.enum(
@@ -74,6 +73,8 @@ type FormValues = z.infer<typeof formSchema>;
 interface FormContextType {
   form: ReturnType<typeof useForm<FormValues>>;
   goToNextStep?: () => void;
+  isSubmitting: boolean;
+  isSuccess: boolean;
 }
 
 const FormContext = createContext<FormContextType | null>(null);
@@ -89,6 +90,9 @@ export function WaitlistFormProvider({
   onGoToNextStep?: () => void;
   onFormComplete?: () => void;
 }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -103,6 +107,7 @@ export function WaitlistFormProvider({
 
   async function onSubmit(values: FormValues) {
     console.log("Form submitted:", values);
+    setIsSubmitting(true);
 
     // Atualiza os dados no banco de dados
     const result = await updateWaitlistData(email, {
@@ -114,26 +119,29 @@ export function WaitlistFormProvider({
       stackOther: values.stackOther,
     });
 
+    setIsSubmitting(false);
+
     if (!result.success) {
-      toast.error(result.error || "Erro ao salvar dados");
+      // Apenas log do erro, sem toast
+      console.error("Erro ao salvar dados:", result.error);
       return;
     }
 
-    toast.success("Respostas enviadas com sucesso!", {
-      description: "Obrigado por compartilhar suas preferências.",
-    });
+    // Marca como sucesso (check verde)
+    setIsSuccess(true);
 
-    // Fecha o expandable screen após um pequeno delay
+    // Fecha o expandable screen após mostrar o check verde
     setTimeout(() => {
       if (onFormComplete) {
         onFormComplete();
       }
       form.reset();
-    }, 1000);
+      setIsSuccess(false);
+    }, 1500);
   }
 
   return (
-    <FormContext.Provider value={{ form, goToNextStep: onGoToNextStep }}>
+    <FormContext.Provider value={{ form, goToNextStep: onGoToNextStep, isSubmitting, isSuccess }}>
       <Form {...form}>
         <form
           onSubmit={(e) => {
@@ -363,7 +371,7 @@ function Measurements() {
 
 // Step 3: Stack
 function Stack() {
-  const { form } = useFormContext();
+  const { form, isSubmitting, isSuccess } = useFormContext();
   const stack = form.watch("stack");
 
   const stackOptions = [
@@ -435,9 +443,23 @@ function Stack() {
       )}
 
       <div className="flex justify-end mt-4">
-        <Button type="submit" className="group w-fit transition-all duration-200 hover:px-6">
-          <span className="hidden group-hover:inline mr-2">Finalizar</span>
-          <Check className="w-5 h-5" />
+        <Button
+          type="submit"
+          className="group w-fit transition-all duration-200 hover:px-6"
+          disabled={isSubmitting || isSuccess}
+        >
+          {!isSubmitting && !isSuccess && (
+            <>
+              <span className="hidden group-hover:inline mr-2">Finalizar</span>
+              <Check className="w-5 h-5" />
+            </>
+          )}
+          {isSubmitting && (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          )}
+          {isSuccess && (
+            <Check className="w-5 h-5 text-green-500" />
+          )}
         </Button>
       </div>
     </div>
