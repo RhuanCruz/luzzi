@@ -118,7 +118,7 @@ function AnnouncementComponent({
 
     childArray.forEach((child) => {
       if (React.isValidElement(child) && (child.type as unknown as Record<symbol, boolean>)[EXPANDABLE_CONTENT_SYMBOL]) {
-        expanded = child.props.children;
+        expanded = (child.props as { children?: ReactNode }).children;
         found = true;
       } else {
         main.push(child);
