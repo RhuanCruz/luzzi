@@ -337,7 +337,7 @@ export function AnnouncementTag({
           <MovingBorder duration={movingBorderDuration} rx="50%" ry="50%">
             <div
               className={cn(
-                'h-12 w-12 bg-[radial-gradient(#0ea5e9_40%,transparent_60%)] opacity-80',
+                'h-12 w-12 bg-[radial-gradient(#1faad4_40%,transparent_60%)] opacity-80',
                 movingBorderClassName
               )}
             />

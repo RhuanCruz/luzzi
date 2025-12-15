@@ -104,11 +104,11 @@ export default function SocialSelector({
     <div className={`mx-auto my-4 w-full max-w-2xl text-center ${className}`}>
       <div className="space-y-6">
         <div className="flex items-center justify-center">
-          <div className="relative flex w-fit items-center justify-center gap-4">
+          <div className="relative flex w-fit items-center justify-center gap-4 ">
             {platforms.map((platform) => (
               <button
                 aria-label={`Select ${platform.name} platform`}
-                className="relative z-10 cursor-pointer rounded-full p-2 transition-colors "
+                className="relative z-10 cursor-pointer rounded-full p-2 transition-colors"
 
                 key={platform.name}
                 onClick={() => {
@@ -130,7 +130,7 @@ export default function SocialSelector({
                   platforms.findIndex((p) => p.name === selectedPlatform.name) *
                   (ICON_SIZE + ICON_GAP),
               }}
-              className="absolute inset-0 z-0 h-9 w-9 rounded-full border bg-background"
+              className="absolute inset-0 z-0 h-9 w-9 rounded-full border bg-muted text-muted-foreground"
               initial={false}
               layoutId="background"
               transition={{
@@ -142,7 +142,7 @@ export default function SocialSelector({
           </div>
         </div>
         <p className="text-md text-primary">
-          Updates on{" "}
+          Acompanhe no{" "}
           <span className="font-medium text-foreground">
             <motion.a
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}

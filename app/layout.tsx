@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
         <div className="min-h-screen w-full relative">
           {/* Dashed Bottom Fade Grid */}
@@ -34,8 +34,8 @@ export default function RootLayout({
             className="absolute inset-0 z-0"
             style={{
               backgroundImage: `
-                linear-gradient(to right, #e7e5e4 1px, transparent 1px),
-                linear-gradient(to bottom, #e7e5e4 1px, transparent 1px)
+                linear-gradient(to right, #4e4e4eff 1px, transparent 1px),
+                linear-gradient(to bottom, #4e4e4eff 1px, transparent 1px)
               `,
               backgroundSize: "20px 20px",
               backgroundPosition: "0 0, 0 0",

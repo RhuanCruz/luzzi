@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
-import { useModal } from "@/components/ui/animated-modal";
+import { useExpandableScreen } from "@/components/ui/expandable-screen";
 import { useState } from "react";
 
 const formSchema = z.object({
@@ -71,7 +71,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function WaitlistForm() {
-  const { setOpen } = useModal();
+  const { collapse } = useExpandableScreen();
   const [step, setStep] = useState(1);
 
   const form = useForm<FormValues>({
@@ -95,7 +95,7 @@ export function WaitlistForm() {
     toast.success("Respostas enviadas com sucesso!", {
       description: "Obrigado por compartilhar suas preferências.",
     });
-    setOpen(false);
+    collapse();
     form.reset();
     setStep(1);
   }
