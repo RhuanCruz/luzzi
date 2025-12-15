@@ -19,6 +19,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { useExpandableScreen } from "@/components/ui/expandable-screen";
 import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 const formSchema = z.object({
   analytics: z.enum(
@@ -141,9 +142,8 @@ export function WaitlistForm() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className={`h-1 flex-1 rounded-full transition-colors ${
-                i <= step ? "bg-primary" : "bg-gray-200"
-              }`}
+              className={`h-1 flex-1 rounded-full transition-colors ${i <= step ? "bg-primary" : "bg-gray-200"
+                }`}
             />
           ))}
         </div>
@@ -273,10 +273,10 @@ export function WaitlistForm() {
                                     return checked
                                       ? field.onChange([...field.value, item.id])
                                       : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== item.id
-                                          )
-                                        );
+                                        field.value?.filter(
+                                          (value) => value !== item.id
+                                        )
+                                      );
                                   }}
                                 />
                               </FormControl>
@@ -343,10 +343,10 @@ export function WaitlistForm() {
                                     return checked
                                       ? field.onChange([...field.value, item.id])
                                       : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== item.id
-                                          )
-                                        );
+                                        field.value?.filter(
+                                          (value) => value !== item.id
+                                        )
+                                      );
                                   }}
                                 />
                               </FormControl>
@@ -395,13 +395,16 @@ export function WaitlistForm() {
             </Button>
           )}
           {step < 3 ? (
-            <Button
-              type="button"
-              onClick={handleNext}
-              className="flex-1"
-            >
-              Continuar
-            </Button>
+            <div className="flex w-full items-center justify-end">
+              <Button
+                type="button"
+                onClick={handleNext}
+                className="w-fit mt-4 flex items-center justify-end px-16"
+              >
+                Continuar
+                <ArrowRight className="w-6 h-6" />
+              </Button>
+            </div>
           ) : (
             <Button type="submit" className="flex-1">
               Finalizar

@@ -18,6 +18,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { createContext, useContext, useState, ReactNode } from "react";
 import { updateWaitlistData } from "@/app/actions/waitlist";
+import { ArrowRight, Check } from "lucide-react";
 
 const formSchema = z.object({
   analytics: z.enum(
@@ -101,7 +102,7 @@ export function WaitlistFormProvider({
   });
 
   async function onSubmit(values: FormValues) {
-    console.log(values);
+    console.log("Form submitted:", values);
 
     // Atualiza os dados no banco de dados
     const result = await updateWaitlistData(email, {
@@ -134,7 +135,14 @@ export function WaitlistFormProvider({
   return (
     <FormContext.Provider value={{ form, goToNextStep: onGoToNextStep }}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>{children}</form>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit(onSubmit)(e);
+          }}
+        >
+          {children}
+        </form>
       </Form>
     </FormContext.Provider>
   );
@@ -244,13 +252,16 @@ function Analytics() {
         />
       )}
 
-      <Button
-        type="button"
-        onClick={handleContinue}
-        className="w-full mt-4"
-      >
-        Continuar
-      </Button>
+      <div className="flex justify-end mt-4">
+        <Button
+          type="button"
+          onClick={handleContinue}
+          className="group w-fit transition-all duration-200 hover:px-6"
+        >
+          <span className="hidden group-hover:inline mr-2">Continuar</span>
+          <ArrowRight className="w-5 h-5" />
+        </Button>
+      </div>
     </div>
   );
 }
@@ -299,10 +310,10 @@ function Measurements() {
                               return checked
                                 ? field.onChange([...field.value, item.id])
                                 : field.onChange(
-                                    field.value?.filter(
-                                      (value) => value !== item.id
-                                    )
-                                  );
+                                  field.value?.filter(
+                                    (value) => value !== item.id
+                                  )
+                                );
                             }}
                           />
                         </FormControl>
@@ -336,13 +347,16 @@ function Measurements() {
         />
       )}
 
-      <Button
-        type="button"
-        onClick={handleContinue}
-        className="w-full mt-4"
-      >
-        Continuar
-      </Button>
+      <div className="flex justify-end mt-4">
+        <Button
+          type="button"
+          onClick={handleContinue}
+          className="group w-fit transition-all duration-200 hover:px-6"
+        >
+          <span className="hidden group-hover:inline mr-2">Continuar</span>
+          <ArrowRight className="w-5 h-5" />
+        </Button>
+      </div>
     </div>
   );
 }
@@ -383,10 +397,10 @@ function Stack() {
                               return checked
                                 ? field.onChange([...field.value, item.id])
                                 : field.onChange(
-                                    field.value?.filter(
-                                      (value) => value !== item.id
-                                    )
-                                  );
+                                  field.value?.filter(
+                                    (value) => value !== item.id
+                                  )
+                                );
                             }}
                           />
                         </FormControl>
@@ -420,9 +434,12 @@ function Stack() {
         />
       )}
 
-      <Button type="submit" className="w-full mt-4">
-        Finalizar
-      </Button>
+      <div className="flex justify-end mt-4">
+        <Button type="submit" className="group w-fit transition-all duration-200 hover:px-6">
+          <span className="hidden group-hover:inline mr-2">Finalizar</span>
+          <Check className="w-5 h-5" />
+        </Button>
+      </div>
     </div>
   );
 }

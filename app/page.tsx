@@ -32,6 +32,7 @@ function HomeContent() {
   const [toolbarExpanded, setToolbarExpanded] = useState(false);
   const [activeStep, setActiveStep] = useState<string | null>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { expand, collapse } = useExpandableScreen();
 
   const handleWaitlistClick = async () => {
@@ -40,11 +41,27 @@ function HomeContent() {
       return;
     }
 
-    // Salva o email no banco de dados
+    setIsLoading(true);
+
+    // Abre o expandable screen imediatamente (UI instantânea)
+    expand();
+
+    // Espera a animação do expandable screen completar antes de abrir o toolbar
+    setTimeout(() => {
+      setToolbarExpanded(true);
+      setActiveStep("analytics");
+    }, 300);
+
+    // Salva o email no banco de dados em background
     const result = await saveEmail(email);
+    setIsLoading(false);
 
     if (!result.success) {
       toast.error(result.error || "Erro ao cadastrar email");
+      // Se falhar, fecha tudo
+      collapse();
+      setToolbarExpanded(false);
+      setActiveStep(null);
       return;
     }
 
@@ -52,16 +69,6 @@ function HomeContent() {
     toast.success("Email cadastrado com sucesso!", {
       description: "Agora complete seu perfil para receber updates personalizados.",
     });
-
-    // Abre o expandable screen após o toast
-    setTimeout(() => {
-      expand();
-      // Espera a animação do expandable screen completar antes de abrir o toolbar
-      setTimeout(() => {
-        setToolbarExpanded(true);
-        setActiveStep("analytics");
-      }, 300);
-    }, 500);
   };
 
   const steps = [
@@ -130,10 +137,17 @@ function HomeContent() {
           />
           <ShimmerButton
             onClick={handleWaitlistClick}
-            disabled={isSubscribed}
-            className={isSubscribed ? "opacity-50 cursor-not-allowed" : ""}
+            disabled={isSubscribed || isLoading}
+            className={isSubscribed || isLoading ? "opacity-50 cursor-not-allowed" : ""}
           >
-            {isSubscribed ? "Obrigado!" : "Entrar na lista"}
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+            ) : isSubscribed ? "Obrigado!" : "Entrar na lista"}
           </ShimmerButton>
         </div>
         <SocialSelector />
