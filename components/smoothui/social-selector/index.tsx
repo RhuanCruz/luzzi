@@ -158,14 +158,7 @@ export default function SocialSelector({
             </motion.a>
           </span>
           <br />
-          <a
-            className="font-medium text-foreground"
-            href={selectedPlatform.url}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            @{handle}
-          </a>
+
         </p>
       </div>
     </div>
