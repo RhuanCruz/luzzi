@@ -106,7 +106,7 @@ export default function SignUpPage() {
                                 minLength={8}
                                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
                             />
-                            <p className="text-xs text-zinc-500">Minimum 8 characters</p>
+                            <p className="text-xs text-zinc-500 p-2">Minimum 8 characters</p>
                         </div>
                     </CardContent>
                     <CardFooter className="flex flex-col gap-4">
