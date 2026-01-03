@@ -1,5 +1,5 @@
 {
-    "name": "@luzzi/analytics",
+    "name": "luzzi-analytics",
     "version": "0.1.0",
     "description": "Simple, plug-and-play analytics SDK for solo builders",
     "main": "./dist/index.js",
