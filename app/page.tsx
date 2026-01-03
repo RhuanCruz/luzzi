@@ -49,11 +49,7 @@ export default function Home() {
               Começar grátis
             </Button>
           </Link>
-          <Link href="/sign-in">
-            <Button size="lg" variant="outline" className="w-full sm:w-auto border-zinc-700 text-zinc-300 hover:bg-zinc-800 px-8">
-              Entrar
-            </Button>
-          </Link>
+
         </div>
       </main>
     </div>
