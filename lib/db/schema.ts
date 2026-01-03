@@ -93,9 +93,7 @@ export const projects = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull(), // User ID from better-auth session
     apiKeyLive: text("api_key_live").notNull().unique(),
     apiKeyTest: text("api_key_test").notNull().unique(),
     plan: text("plan").notNull().default("free"),
