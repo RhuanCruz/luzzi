@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
-  AnimatedSpan,
   Terminal,
   TypingAnimation,
 } from "@/components/ui/terminal"
@@ -13,7 +12,55 @@ import { Announcement, AnnouncementTitle } from "@/components/ui/announcement";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black relative">
+      {/* Dashed Bottom Fade Grid - Only on Landing Page */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #4e4e4eff 1px, transparent 1px),
+            linear-gradient(to bottom, #4e4e4eff 1px, transparent 1px)
+          `,
+          backgroundSize: "20px 20px",
+          backgroundPosition: "0 0, 0 0",
+          maskImage: `
+             repeating-linear-gradient(
+                  to right,
+                  black 0px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 8px
+                ),
+                repeating-linear-gradient(
+                  to bottom,
+                  black 0px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 8px
+                ),
+                radial-gradient(ellipse 100% 80% at 50% 100%, #000 50%, transparent 90%)
+          `,
+          WebkitMaskImage: `
+      repeating-linear-gradient(
+                  to right,
+                  black 0px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 8px
+                ),
+                repeating-linear-gradient(
+                  to bottom,
+                  black 0px,
+                  black 3px,
+                  transparent 3px,
+                  transparent 8px
+                ),
+                radial-gradient(ellipse 100% 80% at 50% 100%, #000 50%, transparent 90%)
+          `,
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
+        }}
+      />
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-8 py-32 px-16 sm:items-start z-10">
         <div className="flex flex-col gap-1">
           <div className="w-fit">
@@ -49,7 +96,6 @@ export default function Home() {
               Começar grátis
             </Button>
           </Link>
-
         </div>
       </main>
     </div>

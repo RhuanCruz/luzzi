@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
+import { BarChart3, Key, Settings, LogOut } from "lucide-react";
 
 const navItems = [
-    { href: "/dashboard", label: "Analytics", icon: "◯" },
-    { href: "/dashboard/keys", label: "API Keys", icon: "◯" },
-    { href: "/dashboard/settings", label: "Settings", icon: "◯" },
+    { href: "/dashboard", label: "Analytics", icon: BarChart3 },
+    { href: "/dashboard/keys", label: "API Keys", icon: Key },
+    { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 export default function DashboardLayout({
@@ -28,7 +29,7 @@ export default function DashboardLayout({
     // Show loading state
     if (isPending) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-zinc-950">
                 <div className="text-zinc-400">Loading...</div>
             </div>
         );
@@ -50,24 +51,25 @@ export default function DashboardLayout({
                         Luzzi
                     </Link>
 
-                    {/* Centered Navigation */}
+                    {/* Centered Navigation with Icons */}
                     <nav className="flex items-center gap-1 border border-zinc-800 rounded-full p-1">
                         {navItems.map((item) => {
                             const isActive =
                                 item.href === "/dashboard"
                                     ? pathname === "/dashboard"
                                     : pathname.startsWith(item.href);
+                            const Icon = item.icon;
                             return (
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isActive
+                                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isActive
                                             ? "bg-white text-black"
                                             : "text-zinc-400 hover:text-white hover:bg-zinc-800"
                                         }`}
                                     title={item.label}
                                 >
-                                    <span className="text-sm">{item.icon}</span>
+                                    <Icon className="w-5 h-5" />
                                 </Link>
                             );
                         })}
@@ -77,8 +79,9 @@ export default function DashboardLayout({
                     <Button
                         variant="ghost"
                         onClick={handleSignOut}
-                        className="text-zinc-400 hover:text-white hover:bg-transparent"
+                        className="text-zinc-400 hover:text-white hover:bg-transparent gap-2"
                     >
+                        <LogOut className="w-4 h-4" />
                         Logout
                     </Button>
                 </div>
