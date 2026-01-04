@@ -44,7 +44,7 @@ export default function DashboardLayout({
     return (
         <div className="min-h-screen bg-zinc-950">
             {/* Minimal Toolbar */}
-            <header className="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-sm sticky top-0 z-50">
+            <header className=" border-zinc-800 bg-zinc-950/80 backdrop-blur-sm sticky top-0 z-50">
                 <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/dashboard" className="text-xl font-semibold text-white">
@@ -64,8 +64,8 @@ export default function DashboardLayout({
                                     key={item.href}
                                     href={item.href}
                                     className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isActive
-                                            ? "bg-white text-black"
-                                            : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+                                        ? "bg-white text-black"
+                                        : "text-zinc-400 hover:text-white hover:bg-zinc-800"
                                         }`}
                                     title={item.label}
                                 >
