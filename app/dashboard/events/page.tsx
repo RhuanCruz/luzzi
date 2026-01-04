@@ -259,7 +259,7 @@ export default function EventsPage() {
             </div>
 
             {/* Filters */}
-            <Card className="border-zinc-800 bg-zinc-900/50">
+            <Card className="bg-zinc-900/50">
                 <CardHeader className="pb-3">
                     <CardTitle className="text-white text-base font-medium">
                         Filters
@@ -339,8 +339,8 @@ export default function EventsPage() {
             </Card>
 
             {/* Table */}
-            <Card className="border-zinc-800 bg-zinc-900/50">
-                <CardContent className="p-0">
+            <Card className="bg-zinc-900/50">
+                <CardContent className="p-2">
                     <div className="overflow-hidden rounded-lg">
                         <Table>
                             <TableHeader className="bg-zinc-800/50">
