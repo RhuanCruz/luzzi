@@ -10,6 +10,8 @@ interface LuzziConfig {
     flushInterval?: number;
     /** Enable debug logging */
     debug?: boolean;
+    /** Device info (useful for React Native where auto-detection doesn't work) */
+    deviceInfo?: DeviceInfo;
 }
 interface DeviceInfo {
     os?: string;

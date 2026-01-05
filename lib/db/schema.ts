@@ -125,6 +125,7 @@ export const events = pgTable(
     sessionId: text("session_id"),
     userId: text("user_id"), // User ID from the client app (not our auth user)
     device: jsonb("device").default({}),
+    geo: jsonb("geo").default({}), // { country, city, region } from IP
     timestamp: timestamp("timestamp").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },

@@ -41,11 +41,12 @@ class LuzziCore {
             // Generate new session ID
             this.sessionId = this.generateSessionId();
 
-            // Collect device info (wrapped in try-catch)
+            // Collect device info (merge config with auto-detected)
             try {
-                this.deviceInfo = this.collectDeviceInfo();
+                const autoDetected = this.collectDeviceInfo();
+                this.deviceInfo = { ...autoDetected, ...config.deviceInfo };
             } catch {
-                this.deviceInfo = {};
+                this.deviceInfo = config.deviceInfo || {};
             }
 
             // Initialize queue
@@ -60,17 +61,19 @@ class LuzziCore {
             this.initialized = true;
             this.log("Initialized", { apiKey: apiKey.slice(0, 10) + "...", sessionId: this.sessionId });
 
-            // Flush on page unload (browser only)
-            if (typeof window !== "undefined") {
+            // Flush on page unload (browser only - not React Native)
+            if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
                 window.addEventListener("beforeunload", () => {
                     this.flush();
                 });
 
-                window.addEventListener("visibilitychange", () => {
-                    if (document.visibilityState === "hidden") {
-                        this.flush();
-                    }
-                });
+                if (typeof document !== "undefined") {
+                    window.addEventListener("visibilitychange", () => {
+                        if (document.visibilityState === "hidden") {
+                            this.flush();
+                        }
+                    });
+                }
             }
         } catch (error) {
             console.warn("[Luzzi] Failed to initialize:", error);

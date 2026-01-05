@@ -51,6 +51,11 @@ interface Event {
         screenWidth?: number;
         screenHeight?: number;
     };
+    geo?: {
+        country?: string;
+        city?: string;
+        region?: string;
+    };
     timestamp: string;
 }
 
@@ -113,6 +118,19 @@ const columns: ColumnDef<Event>[] = [
             return (
                 <span className="text-zinc-500 text-xs">
                     {device.os || "Unknown"} • {device.browser || "Unknown"}
+                </span>
+            );
+        },
+    },
+    {
+        accessorKey: "geo",
+        header: "Location",
+        cell: ({ row }) => {
+            const geo = row.original.geo || {};
+            if (!geo.country) return <span className="text-zinc-600">—</span>;
+            return (
+                <span className="text-zinc-400 text-sm">
+                    {geo.city ? `${geo.city}, ` : ""}{geo.country}
                 </span>
             );
         },

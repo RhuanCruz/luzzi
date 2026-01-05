@@ -74,6 +74,15 @@ export async function POST(request: NextRequest) {
         const remainingQuota = project.eventsLimit - project.eventsCount;
         const eventsToInsert = body.events.slice(0, remainingQuota);
 
+        // Extract geolocation from Vercel headers (free on Vercel)
+        const geo = {
+            country: request.headers.get("x-vercel-ip-country") || undefined,
+            region: request.headers.get("x-vercel-ip-country-region") || undefined,
+            city: request.headers.get("x-vercel-ip-city") || undefined,
+            latitude: request.headers.get("x-vercel-ip-latitude") || undefined,
+            longitude: request.headers.get("x-vercel-ip-longitude") || undefined,
+        };
+
         // Prepare events for insertion
         const eventsData = eventsToInsert.map((event) => ({
             projectId: project.id,
@@ -82,6 +91,7 @@ export async function POST(request: NextRequest) {
             sessionId: event.session_id,
             userId: event.user_id,
             device: event.device || {},
+            geo, // Add geolocation from IP
             timestamp: new Date(event.timestamp),
         }));
 

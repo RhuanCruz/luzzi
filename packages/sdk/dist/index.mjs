@@ -138,9 +138,10 @@ var LuzziCore = class {
       this.debug = config.debug || false;
       this.sessionId = this.generateSessionId();
       try {
-        this.deviceInfo = this.collectDeviceInfo();
+        const autoDetected = this.collectDeviceInfo();
+        this.deviceInfo = { ...autoDetected, ...config.deviceInfo };
       } catch {
-        this.deviceInfo = {};
+        this.deviceInfo = config.deviceInfo || {};
       }
       this.queue.init(
         this.apiKey,
@@ -151,15 +152,17 @@ var LuzziCore = class {
       );
       this.initialized = true;
       this.log("Initialized", { apiKey: apiKey.slice(0, 10) + "...", sessionId: this.sessionId });
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
         window.addEventListener("beforeunload", () => {
           this.flush();
         });
-        window.addEventListener("visibilitychange", () => {
-          if (document.visibilityState === "hidden") {
-            this.flush();
-          }
-        });
+        if (typeof document !== "undefined") {
+          window.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "hidden") {
+              this.flush();
+            }
+          });
+        }
       }
     } catch (error) {
       console.warn("[Luzzi] Failed to initialize:", error);
