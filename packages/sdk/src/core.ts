@@ -28,44 +28,54 @@ class LuzziCore {
      * Must be called before any other method
      */
     init(apiKey: string, config: LuzziConfig = {}): void {
-        if (!apiKey) {
-            console.error("[Luzzi] API key is required");
-            return;
-        }
+        try {
+            if (!apiKey) {
+                console.error("[Luzzi] API key is required");
+                return;
+            }
 
-        this.apiKey = apiKey;
-        this.apiUrl = config.apiUrl || DEFAULT_API_URL;
-        this.debug = config.debug || false;
+            this.apiKey = apiKey;
+            this.apiUrl = config.apiUrl || DEFAULT_API_URL;
+            this.debug = config.debug || false;
 
-        // Generate new session ID
-        this.sessionId = this.generateSessionId();
+            // Generate new session ID
+            this.sessionId = this.generateSessionId();
 
-        // Collect device info
-        this.deviceInfo = this.collectDeviceInfo();
+            // Collect device info (wrapped in try-catch)
+            try {
+                this.deviceInfo = this.collectDeviceInfo();
+            } catch {
+                this.deviceInfo = {};
+            }
 
-        // Initialize queue
-        this.queue.init(
-            this.apiKey,
-            this.apiUrl,
-            config.batchSize || DEFAULT_BATCH_SIZE,
-            config.flushInterval || DEFAULT_FLUSH_INTERVAL,
-            this.debug
-        );
+            // Initialize queue
+            this.queue.init(
+                this.apiKey,
+                this.apiUrl,
+                config.batchSize || DEFAULT_BATCH_SIZE,
+                config.flushInterval || DEFAULT_FLUSH_INTERVAL,
+                this.debug
+            );
 
-        this.initialized = true;
-        this.log("Initialized", { apiKey: apiKey.slice(0, 10) + "...", sessionId: this.sessionId });
+            this.initialized = true;
+            this.log("Initialized", { apiKey: apiKey.slice(0, 10) + "...", sessionId: this.sessionId });
 
-        // Flush on page unload (browser only)
-        if (typeof window !== "undefined") {
-            window.addEventListener("beforeunload", () => {
-                this.flush();
-            });
-
-            window.addEventListener("visibilitychange", () => {
-                if (document.visibilityState === "hidden") {
+            // Flush on page unload (browser only)
+            if (typeof window !== "undefined") {
+                window.addEventListener("beforeunload", () => {
                     this.flush();
-                }
-            });
+                });
+
+                window.addEventListener("visibilitychange", () => {
+                    if (document.visibilityState === "hidden") {
+                        this.flush();
+                    }
+                });
+            }
+        } catch (error) {
+            console.warn("[Luzzi] Failed to initialize:", error);
+            // Still mark as initialized so track() calls don't spam warnings
+            this.initialized = true;
         }
     }
 
@@ -183,19 +193,21 @@ class LuzziCore {
 
         // Browser environment
         if (typeof window !== "undefined" && typeof navigator !== "undefined") {
-            // Detect OS from user agent
-            const ua = navigator.userAgent;
-            if (ua.includes("Windows")) info.os = "windows";
-            else if (ua.includes("Mac")) info.os = "macos";
-            else if (ua.includes("Linux")) info.os = "linux";
-            else if (ua.includes("Android")) info.os = "android";
-            else if (ua.includes("iPhone") || ua.includes("iPad")) info.os = "ios";
+            // Detect OS from user agent (with null check)
+            const ua = navigator.userAgent || "";
+            if (ua && typeof ua === "string") {
+                if (ua.includes("Windows")) info.os = "windows";
+                else if (ua.includes("Mac")) info.os = "macos";
+                else if (ua.includes("Linux")) info.os = "linux";
+                else if (ua.includes("Android")) info.os = "android";
+                else if (ua.includes("iPhone") || ua.includes("iPad")) info.os = "ios";
 
-            // Detect browser
-            if (ua.includes("Chrome") && !ua.includes("Edg")) info.browser = "chrome";
-            else if (ua.includes("Firefox")) info.browser = "firefox";
-            else if (ua.includes("Safari") && !ua.includes("Chrome")) info.browser = "safari";
-            else if (ua.includes("Edg")) info.browser = "edge";
+                // Detect browser
+                if (ua.includes("Chrome") && !ua.includes("Edg")) info.browser = "chrome";
+                else if (ua.includes("Firefox")) info.browser = "firefox";
+                else if (ua.includes("Safari") && !ua.includes("Chrome")) info.browser = "safari";
+                else if (ua.includes("Edg")) info.browser = "edge";
+            }
 
             // Screen dimensions
             info.screen_width = window.screen?.width;

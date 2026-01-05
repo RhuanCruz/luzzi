@@ -128,33 +128,42 @@ var LuzziCore = class {
    * Must be called before any other method
    */
   init(apiKey, config = {}) {
-    if (!apiKey) {
-      console.error("[Luzzi] API key is required");
-      return;
-    }
-    this.apiKey = apiKey;
-    this.apiUrl = config.apiUrl || DEFAULT_API_URL;
-    this.debug = config.debug || false;
-    this.sessionId = this.generateSessionId();
-    this.deviceInfo = this.collectDeviceInfo();
-    this.queue.init(
-      this.apiKey,
-      this.apiUrl,
-      config.batchSize || DEFAULT_BATCH_SIZE,
-      config.flushInterval || DEFAULT_FLUSH_INTERVAL,
-      this.debug
-    );
-    this.initialized = true;
-    this.log("Initialized", { apiKey: apiKey.slice(0, 10) + "...", sessionId: this.sessionId });
-    if (typeof window !== "undefined") {
-      window.addEventListener("beforeunload", () => {
-        this.flush();
-      });
-      window.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "hidden") {
+    try {
+      if (!apiKey) {
+        console.error("[Luzzi] API key is required");
+        return;
+      }
+      this.apiKey = apiKey;
+      this.apiUrl = config.apiUrl || DEFAULT_API_URL;
+      this.debug = config.debug || false;
+      this.sessionId = this.generateSessionId();
+      try {
+        this.deviceInfo = this.collectDeviceInfo();
+      } catch {
+        this.deviceInfo = {};
+      }
+      this.queue.init(
+        this.apiKey,
+        this.apiUrl,
+        config.batchSize || DEFAULT_BATCH_SIZE,
+        config.flushInterval || DEFAULT_FLUSH_INTERVAL,
+        this.debug
+      );
+      this.initialized = true;
+      this.log("Initialized", { apiKey: apiKey.slice(0, 10) + "...", sessionId: this.sessionId });
+      if (typeof window !== "undefined") {
+        window.addEventListener("beforeunload", () => {
           this.flush();
-        }
-      });
+        });
+        window.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "hidden") {
+            this.flush();
+          }
+        });
+      }
+    } catch (error) {
+      console.warn("[Luzzi] Failed to initialize:", error);
+      this.initialized = true;
     }
   }
   /**
@@ -245,16 +254,18 @@ var LuzziCore = class {
   collectDeviceInfo() {
     const info = {};
     if (typeof window !== "undefined" && typeof navigator !== "undefined") {
-      const ua = navigator.userAgent;
-      if (ua.includes("Windows")) info.os = "windows";
-      else if (ua.includes("Mac")) info.os = "macos";
-      else if (ua.includes("Linux")) info.os = "linux";
-      else if (ua.includes("Android")) info.os = "android";
-      else if (ua.includes("iPhone") || ua.includes("iPad")) info.os = "ios";
-      if (ua.includes("Chrome") && !ua.includes("Edg")) info.browser = "chrome";
-      else if (ua.includes("Firefox")) info.browser = "firefox";
-      else if (ua.includes("Safari") && !ua.includes("Chrome")) info.browser = "safari";
-      else if (ua.includes("Edg")) info.browser = "edge";
+      const ua = navigator.userAgent || "";
+      if (ua && typeof ua === "string") {
+        if (ua.includes("Windows")) info.os = "windows";
+        else if (ua.includes("Mac")) info.os = "macos";
+        else if (ua.includes("Linux")) info.os = "linux";
+        else if (ua.includes("Android")) info.os = "android";
+        else if (ua.includes("iPhone") || ua.includes("iPad")) info.os = "ios";
+        if (ua.includes("Chrome") && !ua.includes("Edg")) info.browser = "chrome";
+        else if (ua.includes("Firefox")) info.browser = "firefox";
+        else if (ua.includes("Safari") && !ua.includes("Chrome")) info.browser = "safari";
+        else if (ua.includes("Edg")) info.browser = "edge";
+      }
       info.screen_width = window.screen?.width;
       info.screen_height = window.screen?.height;
       info.language = navigator.language;
