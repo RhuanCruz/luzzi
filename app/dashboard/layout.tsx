@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
-import { BarChart3, Key, Settings, LogOut, List } from "lucide-react";
+import { BarChart3, Key, Settings, LogOut, List, Globe } from "lucide-react";
 
 const navItems = [
     { href: "/dashboard", label: "Analytics", icon: BarChart3 },
     { href: "/dashboard/events", label: "Events", icon: List },
+    { href: "/dashboard/insights", label: "Insights", icon: Globe },
     { href: "/dashboard/keys", label: "API Keys", icon: Key },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
