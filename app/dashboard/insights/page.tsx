@@ -52,6 +52,16 @@ const countryToFlag = (countryCode: string) => {
     return String.fromCodePoint(...codePoints);
 };
 
+// Decode URL-encoded city names from Vercel headers
+const decodeCity = (city: string) => {
+    if (!city) return "";
+    try {
+        return decodeURIComponent(city);
+    } catch {
+        return city;
+    }
+};
+
 // Colors for device pie chart
 const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
 
@@ -302,7 +312,7 @@ export default function InsightsPage() {
                                     className="text-zinc-300 border-zinc-700"
                                 >
                                     {countryToFlag(loc.country)}{" "}
-                                    {loc.city || loc.country}
+                                    {decodeCity(loc.city) || loc.country}
                                 </Badge>
                             ))}
                         </div>

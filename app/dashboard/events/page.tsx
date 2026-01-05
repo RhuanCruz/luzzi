@@ -128,9 +128,16 @@ const columns: ColumnDef<Event>[] = [
         cell: ({ row }) => {
             const geo = row.original.geo || {};
             if (!geo.country) return <span className="text-zinc-600">—</span>;
+            // Decode URL-encoded city names from Vercel headers
+            let city = geo.city || "";
+            try {
+                city = decodeURIComponent(city);
+            } catch {
+                // If decoding fails, use as-is
+            }
             return (
                 <span className="text-zinc-400 text-sm">
-                    {geo.city ? `${geo.city}, ` : ""}{geo.country}
+                    {city ? `${city}, ` : ""}{geo.country}
                 </span>
             );
         },
